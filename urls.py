@@ -8,6 +8,7 @@ from fiber.rest_api import views
 
 from guardian.shortcuts import get_objects_for_user, assign
 
+
 # Monkey patching
 views.ListView.guardian_permissions = None
 
@@ -20,14 +21,22 @@ def post(self, request, *args, **kwargs):
 views.ListView.post = post
 
 
-def get_queryset(self, *args, **kwargs):
+def get_queryset_listview(self, *args, **kwargs):
     qs = super(views.PaginatedListView, self).get_queryset(*args, **kwargs)
     qs = qs.filter(id__in=get_objects_for_user(self.request.user, self.guardian_permissions, qs))
     return qs
-views.PaginatedListView.get_queryset = get_queryset
+views.PaginatedListView.get_queryset = get_queryset_listview
+
+
+def get_queryset_tree_listview(self, *args, **kwargs):
+    qs = super(views.TreeListView, self).get_queryset(*args, **kwargs)
+    qs = qs.filter(id__in=get_objects_for_user(self.request.user, self.guardian_permissions, qs))
+    return qs
+views.TreeListView.get_queryset = get_queryset_tree_listview
 
 views.FileListView.guardian_permissions = ('add_file', 'change_file', 'delete_file')
 views.ImageListView.guardian_permissions = ('add_image', 'change_image', 'delete_image')
+
 
 admin.autodiscover()
 
