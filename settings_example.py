@@ -16,3 +16,9 @@ DATABASES = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+API_RENDER_HTML = True
+INSTALLED_APPS = INSTALLED_APPS + ('djangorestframework', )
+
+API_PERMISSION_CLASS = 'custom_permissions.CustomPermissions'

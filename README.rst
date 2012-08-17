@@ -23,3 +23,19 @@ Add a location
 ``````````````
 
 A superuser adds a location via the backend. A location may be a page tree or a node with children. Along with the location, a group is created for this location.
+
+
+
+Setup
+-----
+
+Assign ownership to top Page called 'A' Via the shell::
+
+    >> from django.contrib.auth.models import User
+    >>> u = User.objects.get(username='harriemagniks')
+    >>> from guardian.shortcuts import assign
+    >>> from fiber.models import Page
+    >>> p = Page.objects.get(title='A')
+    >>> assign('change_page', u, p)
+
+Via the admin give staff permission to 'harriemagniks' and give him all permissions associated to Fiber.
