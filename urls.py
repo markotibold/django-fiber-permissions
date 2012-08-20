@@ -5,12 +5,28 @@ from django.contrib import admin
 
 
 from fiber.rest_api import views
-
+from fiber.admin import FiberAdminPageAdmin
+from fiber.models import Page
+from fiber.fiber_admin import site
 from guardian.shortcuts import get_objects_for_user, assign
 
 
 # Monkey patching
 views.ListView.guardian_permissions = None
+
+
+# This is where the real monkey patching happens\
+class PermissionModelAdmin(FiberAdminPageAdmin):
+
+    def save_model(self, request, obj, form, change):
+        """
+        Given a model instance save it to the database.
+        """
+        super(PermissionModelAdmin, self).save_model(request, obj, form, change)
+        assign('change_page', request.user, obj)
+
+site.unregister(Page)
+site.register(Page, PermissionModelAdmin)
 
 
 def post(self, request, *args, **kwargs):
