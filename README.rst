@@ -31,11 +31,11 @@ Setup
 
 Assign ownership to top Page called 'A' Via the shell::
 
-    >> from django.contrib.auth.models import User
-    >>> u = User.objects.get(username='harriemagniks')
-    >>> from guardian.shortcuts import assign
-    >>> from fiber.models import Page
-    >>> p = Page.objects.get(title='A')
-    >>> assign('change_page', u, p)
+    from django.contrib.auth.models import User
+    u = User.objects.get(username='harriemagniks')
+    from guardian.shortcuts import assign
+    from fiber.models import Page
+    p = Page.objects.get(title='A')
+    assign('change_page', u, p)
 
 Via the admin give staff permission to 'harriemagniks' and give him all permissions associated to Fiber.

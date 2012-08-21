@@ -14,11 +14,9 @@ class CustomPermissions(Permissions):
         qs = qs.filter(id__in=get_objects_for_user(user, 'change_%s' % qs.model.__name__.lower(), qs.model))
         return qs
 
-    def can_edit_content_item(self, user, content_item):
-        return 'change_contentitem' in get_perms(user, content_item)
-
-    def can_edit_page(self, user, page):
-        return 'change_page' in get_perms(user, page)
+    def can_edit(self, user, obj):
+        can = 'change_%s' % obj.__class__.__name__.lower() in get_perms(user, obj)
+        return can
 
     def can_move_page(self, user, page):
         return 'change_page' in get_perms(user, page)
