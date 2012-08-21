@@ -1,41 +1,39 @@
-Requirements for Fiber-permissions
-==================================
+Fiber Permissions Example
+=========================
 
-The permissions will be enforced through the already present api. This means All actions exercised through the frontend. Actions through the backend will not have 
-permission checking for now.
-
-All page nodes displayed in the sidebar must only show the tree the user, or his group belongs to.
-
-Listing Pages, ContentItems, PageContentItems, only returns 
+This example project shows what could be a per-object permission implementation for Fiber.
 
 
+Getting started
+---------------
 
-Wat als 2 contenitems op 2 sites gebruikt worden?
+Install the requirements:
 
-Wat als de superadmin een object toevoegt/ edit? Welke rechten wordne aan het object gehangen?
+    pip install -r requirements.txt
+
+Load the fixtures:
+
+    python manage.py loaddata fixtures/example_initial_data.json
+    python manage.py loaddata fixtures/auth_and_guardian_data.json
+
+The initial data comes with two users::
+
+    admin/admin
+    example-user/test
+
+Login with as example-user. You'll now have limtited right to edit/move/delete pages and content items.
 
 
+Assigning permissions
+=====================
 
-Use cases
----------
-
-Add a location
-``````````````
-
-A superuser adds a location via the backend. A location may be a page tree or a node with children. Along with the location, a group is created for this location.
-
-
-
-Setup
------
-
-Assign ownership to top Page called 'A' Via the shell::
+You can assign object-level permissions to a user as follows::
 
     from django.contrib.auth.models import User
-    u = User.objects.get(username='harriemagniks')
+    u = User.objects.get(username='example-user')
     from guardian.shortcuts import assign
     from fiber.models import Page
     p = Page.objects.get(title='A')
     assign('change_page', u, p)
 
-Via the admin give staff permission to 'harriemagniks' and give him all permissions associated to Fiber.
+Via the admin give staff permission to 'example-user' and give him all permissions associated to Fiber.
