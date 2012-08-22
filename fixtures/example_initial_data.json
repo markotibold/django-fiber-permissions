@@ -483,6 +483,28 @@
         }
     },
     {
+        "pk": 22,
+        "model": "fiber.page",
+        "fields": {
+            "rght": 2,
+            "updated": "2012-08-22T22:13:40Z",
+            "level": 0,
+            "parent": null,
+            "title": "Example Tree",
+            "url": "",
+            "template_name": "",
+            "created": "2012-08-22T22:13:40Z",
+            "mark_current_regexes": "",
+            "redirect_page": null,
+            "lft": 1,
+            "protected": false,
+            "tree_id": 3,
+            "is_public": true,
+            "show_in_menu": true,
+            "metadata": null
+        }
+    },
+    {
         "pk": 1,
         "model": "fiber.pagecontentitem",
         "fields": {
