@@ -1,3 +1,6 @@
+from django.contrib.auth.models import User
+from django.db.models import Q
+
 from guardian.shortcuts import get_objects_for_user, get_perms, assign
 
 from fiber.permissions import Permissions
@@ -9,12 +12,19 @@ CONTENTITEM_PERMISSIONS = ('change_contentitem', 'delete_contentitem')
 
 class CustomPermissions(Permissions):
     def filter_objects(self, user, qs):
+        """
+        Returns all objects that `user` is allowed to change, based on guardian permissions.
+        Returns all objects if user is superuser.
+        """
         if user.is_superuser:
             return qs
         qs = qs.filter(id__in=get_objects_for_user(user, 'change_%s' % qs.model.__name__.lower(), qs.model))
         return qs
 
     def can_edit(self, user, obj):
+        """
+        Returns True if `user` is allowed to edit `obj` based on guardian permissions.
+        """
         can = 'change_%s' % obj.__class__.__name__.lower() in get_perms(user, obj)
         return can
 
@@ -29,5 +39,18 @@ class CustomPermissions(Permissions):
     def object_created(self, user, obj):
         assign('change_%s' % obj.__class__.__name__.lower(), user, obj)
 
+    def _filter_user_and_superuser(self, user, qs):
+        """
+        A user should see files and images owned by him and general files and images, uploaded by the superuser.
+        """
+        superuser = User.objects.get(is_superuser=True)
 
-# Todo merge with fiber Permissions class
+        qs = qs.filter(Q(id__in=get_objects_for_user(user, 'change_%s' % qs.model.__name__.lower(), qs.model)) |
+            Q(id__in=get_objects_for_user(superuser, 'change_%s' % qs.model.__name__.lower(), qs.model)))
+        return qs
+
+    def filter_images(self, user, qs):
+        return self._filter_user_and_superuser(user, qs)
+
+    def filter_files(self, user, qs):
+        return self._filter_user_and_superuser(user, qs)
