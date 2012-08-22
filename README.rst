@@ -25,7 +25,7 @@ Login with as example-user. You'll now have limtited right to edit/move/delete p
 
 
 Assigning permissions
-=====================
+---------------------
 
 You can assign object-level permissions to a user as follows::
 
